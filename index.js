@@ -9,6 +9,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(upload())
 app.use('/images',express.static(path.join(__dirname,'./images')))
+app.use(express.static(path.resolve(__dirname,'./dist'),{maxAge:'1yr',etag:false}))
 app.use('/api/girls',require('./routes/routes'))
 
 if(process.env.PROD_ENV == 'production'){
@@ -18,6 +19,12 @@ if(process.env.PROD_ENV == 'production'){
 		res.sendFile(path.resolve('client','build','index.html'))
 	})
 }
+
+
+
+app.get('*',(req,res)=>{
+	res.sendFile(path.join(__dirname,'./dist/index.html'))
+})
 
 const PORT = process.env.PORT || 8701
 
